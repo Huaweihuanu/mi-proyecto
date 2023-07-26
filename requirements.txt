@@ -9,3 +9,4 @@ deep_translator
 torchaudio==2.0.0
 gradio
 nest_asyncio
+gradio_client==0.2.7
