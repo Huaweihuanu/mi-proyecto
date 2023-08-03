@@ -414,18 +414,23 @@ def translate_from_video(
                 time.sleep(1)
                 break
             if i == 119:
-              print('Error processing video')
-              return
+                print('Error processing video')
+                return
 
         for i in range (120):
             time.sleep(1)
             print('process audio...')
             if os.path.exists(audio_wav):
                 break
+            if i == 60 and round(os.path.getsize(f'{OutputFile}') / (1024 * 1024), 1) == 0.0:
+                os.system('rm intermediate.aac') # only for demo
+                os.system(f'ffmpeg -i {video} -ss 00:00:00 -t 00:00:10 -vn -acodec aac -strict -2 intermediate.aac')
+                time.sleep(5)
+                os.system('ffmpeg -i intermediate.aac -acodec pcm_s16le -ar 44100 -ac 2 audio.wav')
             if i == 119:
               print("Error can't create the audio")
               return
-
+        os.system('rm intermediate.aac')
     else:
         if preview:
             print('Creating a preview from the link, 10 seconds to disable this option, go to advanced settings and turn off preview.')
