@@ -761,7 +761,7 @@ with gr.Blocks(theme=theme) as demo:
                     AUDIO_MIX,
                     ],
                     outputs=[video_output],
-                    cache_examples=True,
+                    cache_examples=False,
                 )
 
 ### link
@@ -867,7 +867,7 @@ with gr.Blocks(theme=theme) as demo:
                     bAUDIO_MIX
                     ],
                     outputs=[blink_output],
-                    cache_examples=True,
+                    cache_examples=False,
                 )
 
 
