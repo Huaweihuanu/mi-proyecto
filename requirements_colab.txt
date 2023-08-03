@@ -7,3 +7,4 @@ deep_translator==1.11.4
 git+https://github.com/m-bain/whisperx.git
 gTTS
 gradio_client==0.2.7
+ipython
