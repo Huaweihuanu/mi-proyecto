@@ -1043,5 +1043,5 @@ with gr.Blocks(theme=theme) as demo:
         bAUDIO_MIX,
         ], outputs=blink_output)
 
-#demo.launch(debug=True, enable_queue=True)
-demo.launch(share=True, enable_queue=True, quiet=True, debug=False)
+demo.launch(debug=False, enable_queue=True)
+#demo.launch(share=True, enable_queue=True, quiet=True, debug=False)
