@@ -80,7 +80,10 @@ tutorial = """
 4. 🚀 Press the '**Translate**' button to obtain the results.
 
 
-# 🎤 How to Use RVC and RVC2 Voices 🎶
+
+
+# 🎤 (Optional) How to Use RVC and RVC2 Voices 🎶
+
 
 The goal is to apply a RVC (Retrieval-based Voice Conversion) to the generated TTS (Text-to-Speech) 🎙️
 
