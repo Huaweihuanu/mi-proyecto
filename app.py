@@ -35,6 +35,10 @@ import shutil
 from urllib.parse import unquote
 import zipfile
 import rarfile
+import logging
+logging.getLogger("numba").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("markdown_it").setLevel(logging.WARNING)
 
 
 
