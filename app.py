@@ -1,6 +1,7 @@
 #%cd SoniTranslate
 # vc infer pipe 161 np.int
 import os
+
 os.system("pip install -r requirements_colab.txt")
 os.system("pip install -r requirements_extra.txt")
 
@@ -660,7 +661,7 @@ with gr.Blocks(theme=theme) as demo:
         with gr.Row():
             with gr.Column():
                 #video_input = gr.UploadButton("Click to Upload a video", file_types=["video"], file_count="single") #gr.Video() # height=300,width=300
-                video_input = gr.File(label="VIDEO")
+                video_input = gr.Video(label="Submit a video") #gr.File(label="VIDEO")
                 #link = gr.HTML()
                 #video_input.change(submit_file_func, video_input, [video_input, link], show_progress='full')
 
@@ -704,7 +705,7 @@ with gr.Blocks(theme=theme) as demo:
                 with gr.Row():
                     video_button = gr.Button("TRANSLATE", )
                 with gr.Row():
-                    video_output = gr.outputs.File(label="DOWNLOAD TRANSLATED VIDEO") #gr.Video()
+                    video_output = gr.Video() #gr.outputs.File(label="DOWNLOAD TRANSLATED VIDEO") 
 
                 line_ = gr.HTML("<hr></h2>")
                 if os.getenv("YOUR_HF_TOKEN") == None or os.getenv("YOUR_HF_TOKEN") == "":
@@ -809,7 +810,7 @@ with gr.Blocks(theme=theme) as demo:
                 with gr.Row():
                     text_button = gr.Button("TRANSLATE")
                 with gr.Row():
-                    blink_output = gr.outputs.File(label="DOWNLOAD TRANSLATED VIDEO") # gr.Video()
+                    blink_output = gr.Video() #gr.outputs.File(label="DOWNLOAD TRANSLATED VIDEO") # gr.Video()
 
 
                 bline_ = gr.HTML("<hr></h2>")
