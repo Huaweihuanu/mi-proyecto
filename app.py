@@ -668,110 +668,6 @@ with gr.Blocks(theme=theme) as demo:
     gr.Markdown(title)
     gr.Markdown(description)
 
-#### video
-    with gr.Tab("Audio Translation for a Video"):
-        with gr.Row():
-            with gr.Column():
-                #video_input = gr.UploadButton("Click to Upload a video", file_types=["video"], file_count="single") #gr.Video() # height=300,width=300
-                video_input = gr.File(label="Submit a short Video")
-                #link = gr.HTML()
-                #video_input.change(submit_file_func, video_input, [video_input, link], show_progress='full')
-
-                SOURCE_LANGUAGE = gr.Dropdown(['Automatic detection', 'Arabic (ar)', 'Chinese (zh)', 'Czech (cs)', 'Danish (da)', 'Dutch (nl)', 'English (en)', 'Finnish (fi)', 'French (fr)', 'German (de)', 'Greek (el)', 'Hebrew (he)', 'Hindi (hi)', 'Hungarian (hu)', 'Italian (it)', 'Japanese (ja)', 'Korean (ko)', 'Persian (fa)', 'Polish (pl)', 'Portuguese (pt)', 'Russian (ru)', 'Spanish (es)', 'Turkish (tr)', 'Ukrainian (uk)', 'Urdu (ur)', 'Vietnamese (vi)'], value='Automatic detection',label = 'Source language', info="This is the original language of the video")
-                TRANSLATE_AUDIO_TO = gr.Dropdown(['Arabic (ar)', 'Chinese (zh)', 'Czech (cs)', 'Danish (da)', 'Dutch (nl)', 'English (en)', 'Finnish (fi)', 'French (fr)', 'German (de)', 'Greek (el)', 'Hebrew (he)', 'Hindi (hi)', 'Hungarian (hu)', 'Italian (it)', 'Japanese (ja)', 'Korean (ko)', 'Persian (fa)', 'Polish (pl)', 'Portuguese (pt)', 'Russian (ru)', 'Spanish (es)', 'Turkish (tr)', 'Ukrainian (uk)', 'Urdu (ur)', 'Vietnamese (vi)'], value='English (en)',label = 'Translate audio to', info="Select the target language, and make sure to select the language corresponding to the speakers of the target language to avoid errors in the process.")
-
-                line_ = gr.HTML("<hr></h2>")
-                gr.Markdown("Select how many people are speaking in the video.")
-                min_speakers = gr.Slider(1, MAX_TTS, default=1, label="min_speakers", step=1, visible=False)
-                max_speakers = gr.Slider(1, MAX_TTS, value=2, step=1, label="Max speakers", interative=True)
-                gr.Markdown("Select the voice you want for each speaker.")
-                def submit(value):
-                    visibility_dict = {
-                        f'tts_voice{i:02d}': gr.update(visible=i < value) for i in range(6)
-                    }
-                    return [value for value in visibility_dict.values()]
-                tts_voice00 = gr.Dropdown(list_tts, value='en-AU-WilliamNeural-Male', label = 'TTS Speaker 1', visible=True, interactive= True)
-                tts_voice01 = gr.Dropdown(list_tts, value='en-CA-ClaraNeural-Female', label = 'TTS Speaker 2', visible=True, interactive= True)
-                tts_voice02 = gr.Dropdown(list_tts, value='en-GB-ThomasNeural-Male', label = 'TTS Speaker 3', visible=False, interactive= True)
-                tts_voice03 = gr.Dropdown(list_tts, value='en-GB-SoniaNeural-Female', label = 'TTS Speaker 4', visible=False, interactive= True)
-                tts_voice04 = gr.Dropdown(list_tts, value='en-NZ-MitchellNeural-Male', label = 'TTS Speaker 5', visible=False, interactive= True)
-                tts_voice05 = gr.Dropdown(list_tts, value='en-GB-MaisieNeural-Female', label = 'TTS Speaker 6', visible=False, interactive= True)
-                max_speakers.change(submit, max_speakers, [tts_voice00, tts_voice01, tts_voice02, tts_voice03, tts_voice04, tts_voice05])
-
-                with gr.Column():
-                      with gr.Accordion("Advanced Settings", open=False):
-
-                          AUDIO_MIX = gr.Dropdown(['Mixing audio with sidechain compression', 'Adjusting volumes and mixing audio'], value='Adjusting volumes and mixing audio', label = 'Audio Mixing Method', info="Mix original and translated audio files to create a customized, balanced output with two available mixing modes.")
-
-                          gr.HTML("<hr></h2>")
-                          gr.Markdown("Default configuration of Whisper.")
-                          WHISPER_MODEL_SIZE = gr.inputs.Dropdown(['tiny', 'base', 'small', 'medium', 'large-v1', 'large-v2'], default=whisper_model_default, label="Whisper model")
-                          batch_size = gr.inputs.Slider(1, 32, default=16, label="Batch size", step=1)
-                          compute_type = gr.inputs.Dropdown(list_compute_type, default=compute_type_default, label="Compute type")
-
-                          gr.HTML("<hr></h2>")
-                          VIDEO_OUTPUT_NAME = gr.Textbox(label="Translated file name" ,value="video_output.mp4", info="The name of the output file")
-                          PREVIEW = gr.Checkbox(label="Preview", info="Preview cuts the video to only 10 seconds for testing purposes. Please deactivate it to retrieve the full video duration.")
-
-            with gr.Column(variant='compact'):
-                with gr.Row():
-                    video_button = gr.Button("TRANSLATE", )
-                with gr.Row():
-                    video_output = gr.Video() #gr.outputs.File(label="DOWNLOAD TRANSLATED VIDEO") 
-
-                line_ = gr.HTML("<hr></h2>")
-                if os.getenv("YOUR_HF_TOKEN") == None or os.getenv("YOUR_HF_TOKEN") == "":
-                  HFKEY = gr.Textbox(visible= True, label="HF Token", info="One important step is to accept the license agreement for using Pyannote. You need to have an account on Hugging Face and accept the license to use the models: https://huggingface.co/pyannote/speaker-diarization and https://huggingface.co/pyannote/segmentation. Get your KEY TOKEN here: https://hf.co/settings/tokens", placeholder="Token goes here...")
-                else:
-                  HFKEY = gr.Textbox(visible= False, label="HF Token", info="One important step is to accept the license agreement for using Pyannote. You need to have an account on Hugging Face and accept the license to use the models: https://huggingface.co/pyannote/speaker-diarization and https://huggingface.co/pyannote/segmentation. Get your KEY TOKEN here: https://hf.co/settings/tokens", placeholder="Token goes here...")
-
-                gr.Examples(
-                    examples=[
-                        [
-                            "./assets/Video_main.mp4",
-                            "",
-                            False,
-                            "large-v2",
-                            16,
-                            "float16",
-                            "Spanish (es)",
-                            "English (en)",
-                            1,
-                            2,
-                            'en-AU-WilliamNeural-Male',
-                            'en-CA-ClaraNeural-Female',
-                            'en-GB-ThomasNeural-Male',
-                            'en-GB-SoniaNeural-Female',
-                            'en-NZ-MitchellNeural-Male',
-                            'en-GB-MaisieNeural-Female',
-                            "video_output.mp4",
-                            'Adjusting volumes and mixing audio',
-                        ],
-                    ],
-                    fn=translate_from_video,
-                    inputs=[
-                    video_input,
-                    HFKEY,
-                    PREVIEW,
-                    WHISPER_MODEL_SIZE,
-                    batch_size,
-                    compute_type,
-                    SOURCE_LANGUAGE,
-                    TRANSLATE_AUDIO_TO,
-                    min_speakers,
-                    max_speakers,
-                    tts_voice00,
-                    tts_voice01,
-                    tts_voice02,
-                    tts_voice03,
-                    tts_voice04,
-                    tts_voice05,
-                    VIDEO_OUTPUT_NAME,
-                    AUDIO_MIX,
-                    ],
-                    outputs=[video_output],
-                    cache_examples=False,
-                )
 
 ### link
 
@@ -879,6 +775,114 @@ with gr.Blocks(theme=theme) as demo:
                     cache_examples=False,
                 )
 
+
+#### video
+    with gr.Tab("Audio Translation for a Video"):
+        with gr.Row():
+            with gr.Column():
+                #video_input = gr.UploadButton("Click to Upload a video", file_types=["video"], file_count="single") #gr.Video() # height=300,width=300
+                video_input = gr.File(label="Submit a short Video")
+                #link = gr.HTML()
+                #video_input.change(submit_file_func, video_input, [video_input, link], show_progress='full')
+
+                SOURCE_LANGUAGE = gr.Dropdown(['Automatic detection', 'Arabic (ar)', 'Chinese (zh)', 'Czech (cs)', 'Danish (da)', 'Dutch (nl)', 'English (en)', 'Finnish (fi)', 'French (fr)', 'German (de)', 'Greek (el)', 'Hebrew (he)', 'Hindi (hi)', 'Hungarian (hu)', 'Italian (it)', 'Japanese (ja)', 'Korean (ko)', 'Persian (fa)', 'Polish (pl)', 'Portuguese (pt)', 'Russian (ru)', 'Spanish (es)', 'Turkish (tr)', 'Ukrainian (uk)', 'Urdu (ur)', 'Vietnamese (vi)'], value='Automatic detection',label = 'Source language', info="This is the original language of the video")
+                TRANSLATE_AUDIO_TO = gr.Dropdown(['Arabic (ar)', 'Chinese (zh)', 'Czech (cs)', 'Danish (da)', 'Dutch (nl)', 'English (en)', 'Finnish (fi)', 'French (fr)', 'German (de)', 'Greek (el)', 'Hebrew (he)', 'Hindi (hi)', 'Hungarian (hu)', 'Italian (it)', 'Japanese (ja)', 'Korean (ko)', 'Persian (fa)', 'Polish (pl)', 'Portuguese (pt)', 'Russian (ru)', 'Spanish (es)', 'Turkish (tr)', 'Ukrainian (uk)', 'Urdu (ur)', 'Vietnamese (vi)'], value='English (en)',label = 'Translate audio to', info="Select the target language, and make sure to select the language corresponding to the speakers of the target language to avoid errors in the process.")
+
+                line_ = gr.HTML("<hr></h2>")
+                gr.Markdown("Select how many people are speaking in the video.")
+                min_speakers = gr.Slider(1, MAX_TTS, default=1, label="min_speakers", step=1, visible=False)
+                max_speakers = gr.Slider(1, MAX_TTS, value=2, step=1, label="Max speakers", interative=True)
+                gr.Markdown("Select the voice you want for each speaker.")
+                def submit(value):
+                    visibility_dict = {
+                        f'tts_voice{i:02d}': gr.update(visible=i < value) for i in range(6)
+                    }
+                    return [value for value in visibility_dict.values()]
+                tts_voice00 = gr.Dropdown(list_tts, value='en-AU-WilliamNeural-Male', label = 'TTS Speaker 1', visible=True, interactive= True)
+                tts_voice01 = gr.Dropdown(list_tts, value='en-CA-ClaraNeural-Female', label = 'TTS Speaker 2', visible=True, interactive= True)
+                tts_voice02 = gr.Dropdown(list_tts, value='en-GB-ThomasNeural-Male', label = 'TTS Speaker 3', visible=False, interactive= True)
+                tts_voice03 = gr.Dropdown(list_tts, value='en-GB-SoniaNeural-Female', label = 'TTS Speaker 4', visible=False, interactive= True)
+                tts_voice04 = gr.Dropdown(list_tts, value='en-NZ-MitchellNeural-Male', label = 'TTS Speaker 5', visible=False, interactive= True)
+                tts_voice05 = gr.Dropdown(list_tts, value='en-GB-MaisieNeural-Female', label = 'TTS Speaker 6', visible=False, interactive= True)
+                max_speakers.change(submit, max_speakers, [tts_voice00, tts_voice01, tts_voice02, tts_voice03, tts_voice04, tts_voice05])
+
+                with gr.Column():
+                      with gr.Accordion("Advanced Settings", open=False):
+
+                          AUDIO_MIX = gr.Dropdown(['Mixing audio with sidechain compression', 'Adjusting volumes and mixing audio'], value='Adjusting volumes and mixing audio', label = 'Audio Mixing Method', info="Mix original and translated audio files to create a customized, balanced output with two available mixing modes.")
+
+                          gr.HTML("<hr></h2>")
+                          gr.Markdown("Default configuration of Whisper.")
+                          WHISPER_MODEL_SIZE = gr.inputs.Dropdown(['tiny', 'base', 'small', 'medium', 'large-v1', 'large-v2'], default=whisper_model_default, label="Whisper model")
+                          batch_size = gr.inputs.Slider(1, 32, default=16, label="Batch size", step=1)
+                          compute_type = gr.inputs.Dropdown(list_compute_type, default=compute_type_default, label="Compute type")
+
+                          gr.HTML("<hr></h2>")
+                          VIDEO_OUTPUT_NAME = gr.Textbox(label="Translated file name" ,value="video_output.mp4", info="The name of the output file")
+                          PREVIEW = gr.Checkbox(label="Preview", info="Preview cuts the video to only 10 seconds for testing purposes. Please deactivate it to retrieve the full video duration.")
+
+            with gr.Column(variant='compact'):
+                with gr.Row():
+                    video_button = gr.Button("TRANSLATE", )
+                with gr.Row():
+                    video_output = gr.Video() #gr.outputs.File(label="DOWNLOAD TRANSLATED VIDEO") 
+
+                line_ = gr.HTML("<hr></h2>")
+                if os.getenv("YOUR_HF_TOKEN") == None or os.getenv("YOUR_HF_TOKEN") == "":
+                  HFKEY = gr.Textbox(visible= True, label="HF Token", info="One important step is to accept the license agreement for using Pyannote. You need to have an account on Hugging Face and accept the license to use the models: https://huggingface.co/pyannote/speaker-diarization and https://huggingface.co/pyannote/segmentation. Get your KEY TOKEN here: https://hf.co/settings/tokens", placeholder="Token goes here...")
+                else:
+                  HFKEY = gr.Textbox(visible= False, label="HF Token", info="One important step is to accept the license agreement for using Pyannote. You need to have an account on Hugging Face and accept the license to use the models: https://huggingface.co/pyannote/speaker-diarization and https://huggingface.co/pyannote/segmentation. Get your KEY TOKEN here: https://hf.co/settings/tokens", placeholder="Token goes here...")
+
+                gr.Examples(
+                    examples=[
+                        [
+                            "./assets/Video_main.mp4",
+                            "",
+                            False,
+                            "large-v2",
+                            16,
+                            "float16",
+                            "Spanish (es)",
+                            "English (en)",
+                            1,
+                            2,
+                            'en-AU-WilliamNeural-Male',
+                            'en-CA-ClaraNeural-Female',
+                            'en-GB-ThomasNeural-Male',
+                            'en-GB-SoniaNeural-Female',
+                            'en-NZ-MitchellNeural-Male',
+                            'en-GB-MaisieNeural-Female',
+                            "video_output.mp4",
+                            'Adjusting volumes and mixing audio',
+                        ],
+                    ],
+                    fn=translate_from_video,
+                    inputs=[
+                    video_input,
+                    HFKEY,
+                    PREVIEW,
+                    WHISPER_MODEL_SIZE,
+                    batch_size,
+                    compute_type,
+                    SOURCE_LANGUAGE,
+                    TRANSLATE_AUDIO_TO,
+                    min_speakers,
+                    max_speakers,
+                    tts_voice00,
+                    tts_voice01,
+                    tts_voice02,
+                    tts_voice03,
+                    tts_voice04,
+                    tts_voice05,
+                    VIDEO_OUTPUT_NAME,
+                    AUDIO_MIX,
+                    ],
+                    outputs=[video_output],
+                    cache_examples=False,
+                )
+
+
+    
 
     with gr.Tab("Custom voice RVC"):
         with gr.Column():
