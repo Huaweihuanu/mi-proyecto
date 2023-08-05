@@ -673,7 +673,7 @@ with gr.Blocks(theme=theme) as demo:
         with gr.Row():
             with gr.Column():
                 #video_input = gr.UploadButton("Click to Upload a video", file_types=["video"], file_count="single") #gr.Video() # height=300,width=300
-                video_input = gr.Video(label="Submit a video") #gr.File(label="VIDEO")
+                video_input = gr.File(label="Submit a short Video")
                 #link = gr.HTML()
                 #video_input.change(submit_file_func, video_input, [video_input, link], show_progress='full')
 
