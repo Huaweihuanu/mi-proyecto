@@ -5,8 +5,7 @@ gradio==3.35.2
 pydub==0.25.1
 edge_tts==6.1.7
 deep_translator==1.11.4
-#git+https://github.com/m-bain/whisperx.git
-git+https://github.com/m-bain/whisperX.git@f137f31
+git+https://github.com/R3gm/whisperX.git@cuda_11_8
 gTTS
 gradio_client==0.2.7
 ipython
