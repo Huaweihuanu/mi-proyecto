@@ -284,6 +284,7 @@ class SoniTranslate(SoniTrCache):
             )
 
         self.device = os.environ.get("SONITR_DEVICE")
+        self.device = self.device if os.environ.get("ZERO_GPU") != "TRUE" else "cuda"
         self.result_diarize = None
         self.align_language = None
         self.result_source_lang = None
@@ -1886,10 +1887,11 @@ def create_gui(theme, logs_in_gui=False):
                                 label=lg_conf["ctype_label"],
                                 info=lg_conf["ctype_info"],
                             )
+                            batch_size_value = 8 if os.environ.get("ZERO_GPU") != "TRUE" else 32
                             batch_size = gr.Slider(
                                 minimum=1,
                                 maximum=32,
-                                value=8,
+                                value=batch_size_value,
                                 label=lg_conf["batchz_label"],
                                 info=lg_conf["batchz_info"],
                                 step=1,
@@ -2041,14 +2043,14 @@ def create_gui(theme, logs_in_gui=False):
                                 "",
                                 False,
                                 whisper_model_default,
-                                4,
+                                batch_size_value,
                                 com_t_default,
                                 "Spanish (es)",
                                 "English (en)",
                                 1,
                                 2,
-                                "en-CA-ClaraNeural-Female",
-                                "en-AU-WilliamNeural-Male",
+                                "en-US-EmmaMultilingualNeural-Female",
+                                "en-US-AndrewMultilingualNeural-Male",
                             ],
                         ],  # no update
                         fn=SoniTr.batch_multilingual_media_conversion,
