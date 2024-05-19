@@ -1308,6 +1308,9 @@ class SoniTranslate(SoniTrCache):
         if not document:
             raise Exception("No data found")
 
+        if os.environ.get("ZERO_GPU") == "TRUE" and not is_string:
+            raise RuntimeError("This option is disabled in this demo.")
+        
         if "videobook" in output_type:
             if not document.lower().endswith(".pdf"):
                 raise ValueError(
