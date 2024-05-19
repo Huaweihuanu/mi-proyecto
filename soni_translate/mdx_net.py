@@ -367,6 +367,18 @@ def run_mdx(
         processor_num = -1
         m_threads = 1
 
+    if os.environ.get("ZERO_GPU") == "TRUE":
+        duration = librosa.get_duration(filename=filename)
+
+        if duration < 60:
+            pass
+        elif duration >= 60 and duration <= 900:
+            m_threads = 4
+        elif duration > 900:
+            m_threads = 16
+
+    logger.info(f"MDX-NET Threads: {m_threads}, duration {duration}")
+    
     model_hash = MDX.get_hash(model_path)
     mp = model_params.get(model_hash)
     model = MDXModel(
