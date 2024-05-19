@@ -4,6 +4,7 @@ os.system("pip install -q piper-tts==1.2.0")
 os.system("pip install -q -r requirements_xtts.txt")
 os.system("pip install -q TTS==0.21.1  --no-deps")
 import spaces
+import librosa
 from soni_translate.logging_setup import (
     logger,
     set_logging_level,
@@ -661,6 +662,31 @@ class SoniTranslate(SoniTrCache):
                 logger.info(f"Done: {output}")
                 return output
 
+            if os.environ.get("IS_DEMO") == "TRUE":
+                duration_verify = librosa.get_duration(filename=base_audio_wav)
+                logger.info(f"Duration: {duration_verify} seconds")
+                if duration_verify > 1500:
+                    raise RuntimeError(
+                        "The audio is too long to process in this demo. Alternatively, you"
+                        " can install the app locally or use the Colab notebook available "
+                        "in the SoniTranslate repository."
+                    )
+                elif duration_verify > 300:
+                    tts_voices_list = [
+                        tts_voice00, tts_voice01, tts_voice02, tts_voice03, tts_voice04,
+                        tts_voice05, tts_voice06, tts_voice07, tts_voice08, tts_voice09,
+                        tts_voice10, tts_voice11
+                    ]
+                    
+                    for tts_voice_ in tts_voices_list:
+                        if "_XTTS_" in tts_voice_:
+                            raise RuntimeError(
+                                "XTTS is too slow to be used for audio longer than 5 "
+                                "minutes in this demo. Alternatively, you can install "
+                                "the app locally or use the Colab notebook available in"
+                                " the SoniTranslate repository."
+                            )
+            
             if not self.task_in_cache("refine_vocals", [vocal_refinement], {}):
                 self.vocals = None
                 if vocal_refinement:
@@ -1308,9 +1334,14 @@ class SoniTranslate(SoniTrCache):
         if not document:
             raise Exception("No data found")
 
-        if os.environ.get("ZERO_GPU") == "TRUE" and not is_string:
-            raise RuntimeError("This option is disabled in this demo.")
-        
+        if os.environ.get("IS_DEMO") == "TRUE" and not is_string:
+            raise RuntimeError(
+                "This option is disabled in this demo. "
+                "Alternatively, you can install "
+                "the app locally or use the Colab notebook available in"
+                " the SoniTranslate repository."
+            )
+
         if "videobook" in output_type:
             if not document.lower().endswith(".pdf"):
                 raise ValueError(
