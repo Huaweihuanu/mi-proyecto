@@ -2001,7 +2001,7 @@ def create_gui(theme, logs_in_gui=False):
                     edit_sub_check = gr.Checkbox(
                         label=lg_conf["edit_sub_label"],
                         info=lg_conf["edit_sub_info"],
-                        interactive=False,
+                        interactive=(False if os.environ.get("IS_DEMO") == "TRUE" else True),
                     )
                     dummy_false_check = gr.Checkbox(
                         False,
