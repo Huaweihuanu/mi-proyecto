@@ -27,7 +27,7 @@ def random_sleep():
         time.sleep(sleep_time)
 
 
-@spaces.GPU(duration=110)
+@spaces.GPU
 def load_and_transcribe_audio(asr_model, audio, compute_type, language, asr_options, batch_size, segment_duration_limit):
     # Load model
     model = whisperx.load_model(
