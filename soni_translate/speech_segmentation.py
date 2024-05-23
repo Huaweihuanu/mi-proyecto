@@ -369,7 +369,7 @@ def align_speech(audio, result):
         )
         return result
 
-    random_sleep()
+    # random_sleep()
     result = load_align_and_align_segments(result, audio, DAMHF)
 
     return result
