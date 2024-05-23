@@ -1714,7 +1714,7 @@ def create_gui(theme, logs_in_gui=False):
                             )
                             voice_imitation_method_gui = gr.Dropdown(
                                 voice_imitation_method_options,
-                                value=voice_imitation_method_options[0],
+                                value=voice_imitation_method_options[-1],
                                 label=lg_conf["vc_method_label"],
                                 info=lg_conf["vc_method_info"],
                             )
