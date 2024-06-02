@@ -81,7 +81,7 @@ def load_align_and_align_segments(result, audio, DAMHF):
 
     return alignment_result
 
-@spaces.GPU(duration=110)
+@spaces.GPU
 def diarize_audio(diarize_model, audio_wav, min_speakers, max_speakers):
 
     if os.environ.get("ZERO_GPU") == "TRUE":
