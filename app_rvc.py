@@ -4,6 +4,10 @@ os.system("pip install -q piper-tts==1.2.0")
 os.system("pip install -q -r requirements_xtts.txt")
 os.system("pip install -q TTS==0.21.1  --no-deps")
 import spaces
+import torch
+if os.environ.get("ZERO_GPU") != "TRUE" and torch.cuda.is_available():
+    # onnxruntime GPU
+    os.system("pip install ort-nightly-gpu --index-url=https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ort-cuda-12-nightly/pypi/simple/")
 import librosa
 from soni_translate.logging_setup import (
     logger,
@@ -11,7 +15,6 @@ from soni_translate.logging_setup import (
     configure_logging_libs,
 ); configure_logging_libs() # noqa
 import whisperx
-import torch
 import os
 from soni_translate.audio_segments import create_translated_audio
 from soni_translate.text_to_speech import (
